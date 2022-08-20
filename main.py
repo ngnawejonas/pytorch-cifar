@@ -7,6 +7,7 @@ import torch.backends.cudnn as cudnn
 
 import torchvision
 import torchvision.transforms as transforms
+import torchvision.models as models
 
 import os
 import argparse
@@ -38,7 +39,7 @@ classes = ('plane', 'car', 'bird', 'cat', 'deer',
 
 # Model
 print('==> Building model..')
-net = ResNet18()
+net = models.resnet18(num_classes=10) #ResNet18()
 net = net.to(device)
 if device == 'cuda':
     net = torch.nn.DataParallel(net)
