@@ -37,6 +37,7 @@ set_seeds(139937)
 # Data
 print('==> Preparing data..')
 dataset = get_CIFAR10(CIFAR10_Handler, 50000, 10000)
+dataset.initialize_labels(50000)
 _, trainset = dataset.get_labeled_data()
 testset = dataset.get_test_data()
 # trainset, testset = get_data()
