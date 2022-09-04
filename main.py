@@ -1,4 +1,6 @@
 '''Train CIFAR10 with PyTorch.'''
+import numpy as np
+import random
 import torch
 import torch.nn as nn
 import torch.optim as optim
@@ -22,10 +24,15 @@ parser.add_argument('--resume', '-r', action='store_true',
                     help='resume from checkpoint')
 args = parser.parse_args()
 
+def set_seeds(seed):
+    np.random.seed(seed)
+    random.seed(seed)
+    torch.manual_seed(seed)
+
 device = 'cuda' if torch.cuda.is_available() else 'cpu'
 best_acc = 0  # best test accuracy
 start_epoch = 0  # start from epoch 0 or last checkpoint epoch
-
+set_seeds(139937)
 # Data
 print('==> Preparing data..')
 trainset, testset = get_data()
