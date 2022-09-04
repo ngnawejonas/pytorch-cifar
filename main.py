@@ -37,8 +37,8 @@ set_seeds(139937)
 # Data
 print('==> Preparing data..')
 dataset = get_CIFAR10(CIFAR10_Handler, 50000, 10000)
-trainset = dataset.get_labeled_data()
-testset = dataset.get_test_data()
+_, trainset = dataset.get_labeled_data()
+_, testset = dataset.get_test_data()
 # trainset, testset = get_data()
 trainloader = torch.utils.data.DataLoader(
     trainset, batch_size=128, shuffle=True, num_workers=2)
