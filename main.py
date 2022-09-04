@@ -17,6 +17,7 @@ import argparse
 from models import *
 from utils import progress_bar
 from data import get_CIFAR10
+from xdata import get_data
 from handlers import CIFAR10_Handler
 
 parser = argparse.ArgumentParser(description='PyTorch CIFAR10 Training')
@@ -36,11 +37,11 @@ start_epoch = 0  # start from epoch 0 or last checkpoint epoch
 set_seeds(139937)
 # Data
 print('==> Preparing data..')
-dataset = get_CIFAR10(CIFAR10_Handler, 50000, 10000)
-dataset.initialize_labels(50000)
-_, trainset = dataset.get_labeled_data()
-testset = dataset.get_test_data()
-# trainset, testset = get_data()
+# dataset = get_CIFAR10(CIFAR10_Handler, 50000, 10000)
+# dataset.initialize_labels(50000)
+# _, trainset = dataset.get_labeled_data()
+# testset = dataset.get_test_data()
+trainset, testset = get_data()
 trainloader = torch.utils.data.DataLoader(
     trainset, batch_size=128, shuffle=True, num_workers=2)
 testloader = torch.utils.data.DataLoader(
