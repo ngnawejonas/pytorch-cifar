@@ -16,7 +16,8 @@ import argparse
 
 from models import *
 from utils import progress_bar
-from data import get_data
+from data import get_CIFAR10
+from handlers import CIFAR10_Handler
 
 parser = argparse.ArgumentParser(description='PyTorch CIFAR10 Training')
 parser.add_argument('--lr', default=0.1, type=float, help='learning rate')
@@ -35,7 +36,10 @@ start_epoch = 0  # start from epoch 0 or last checkpoint epoch
 set_seeds(139937)
 # Data
 print('==> Preparing data..')
-trainset, testset = get_data()
+dataset = get_CIFAR10(CIFAR10_Handler, 50000, 10000)
+trainset = dataset.get_labeled_data()
+testset = dataset.get_test_data()
+# trainset, testset = get_data()
 trainloader = torch.utils.data.DataLoader(
     trainset, batch_size=128, shuffle=True, num_workers=2)
 testloader = torch.utils.data.DataLoader(
@@ -59,9 +63,10 @@ if args.resume:
     start_epoch = checkpoint['epoch']
 
 criterion = F.cross_entropy #nn.CrossEntropyLoss()
-optimizer = optim.SGD(net.parameters(), lr=args.lr,
-                      momentum=0.9, weight_decay=5e-4)
-scheduler = torch.optim.lr_scheduler.CosineAnnealingLR(optimizer, T_max=200)
+opt_params = {'lr':args.lr, 'momentum':0.9, 'weight_decay':5e-4}
+optimizer = optim.SGD(net.parameters(), **opt_params)
+sch_params = {'T_max':200}
+scheduler = torch.optim.lr_scheduler.CosineAnnealingLR(optimizer, **sch_params)
 
 
 # Training
@@ -93,6 +98,7 @@ def test(epoch):
     net.eval()
     test_loss = 0
     correct = 0
+    correct2 = 0
     total = 0
     with torch.no_grad():
         for batch_idx, (inputs, targets) in enumerate(testloader):
@@ -104,7 +110,8 @@ def test(epoch):
             _, predicted = outputs.max(1)
             total += targets.size(0)
             correct += predicted.eq(targets).sum().item()
-
+            correct2 +=  (targets == predicted).sum().item()
+            assert correct == correct2
             progress_bar(batch_idx, len(testloader), 'Loss: %.3f | Acc: %.3f%% (%d/%d)'
                          % (test_loss/(batch_idx+1), 100.*correct/total, correct, total))
 
