@@ -136,22 +136,26 @@ def get_CIFAR10(handler, pool_size, n_adv_test):
             ),
         ]
     )
-    # data_train = datasets.CIFAR10('./data/CIFAR10', train=True, download=True, transform=transform_train)
-    # data_test = datasets.CIFAR10('./data/CIFAR10', train=False, download=True, transform=transform_test)
+    # raw_train = datasets.CIFAR10('./data/CIFAR10', train=True, download=True, transform=transform_train)
+    # raw_test = datasets.CIFAR10('./data/CIFAR10', train=False, download=True, transform=transform_test)
 
-    raw_train = datasets.CIFAR10('./data/CIFAR10', train=True, download=True)
-    raw_test = datasets.CIFAR10('./data/CIFAR10', train=False, download=True)
+    data_train = datasets.CIFAR10('./data/CIFAR10', train=True, download=True, transform=transform_train)
+    data_test = datasets.CIFAR10('./data/CIFAR10', train=False, download=True, transform=transform_test)
 
-    # dtl = DataLoader(data_train, batch_size=len(data_train))
-    # for X,y in dtl:
-    #     X_train = X
-    #     Y_train = y
 
-    # dtl = DataLoader(data_test, batch_size=len(data_test))
-    # for X,y in dtl:
-    #     X_test = X
-    #     Y_test = y
+    # raw_train = datasets.CIFAR10('./data/CIFAR10', train=True, download=True)
+    # raw_test = datasets.CIFAR10('./data/CIFAR10', train=False, download=True)
+
+    dtl = DataLoader(data_train, batch_size=len(data_train))
+    for X,y in dtl:
+        X_train = X
+        Y_train = y
+
+    dtl = DataLoader(data_test, batch_size=len(data_test))
+    for X,y in dtl:
+        X_test = X
+        Y_test = y
 
     # print('data.py:146 ', X_train.data.shape, X_train.dtype, type(X_train))
-    # return Data(X_train[:pool_size], Y_train[:pool_size], X_test, Y_test, handler, n_adv_test)
-    return Data(raw_train.data[:pool_size], raw_train.targets[:pool_size], raw_test.data, raw_test.targets, handler, n_adv_test)
+    return Data(X_train[:pool_size], Y_train[:pool_size], X_test, Y_test, handler, n_adv_test)
+    # return Data(raw_train.data[:pool_size], raw_train.targets[:pool_size], raw_test.data, raw_test.targets, handler, n_adv_test)
